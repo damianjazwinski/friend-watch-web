@@ -8,6 +8,7 @@ const useLogoutTrigger = () => {
 
   useEffect(() => {
     if (!isLoggedIn) {
+      localStorage.removeItem("tokenExpirations");
       navigate({ to: "/login" });
     }
   }, [isLoggedIn]);

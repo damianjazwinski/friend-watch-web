@@ -7,6 +7,13 @@ interface UserStore {
   login: () => void;
   logout: () => void;
 }
+
+interface SideMenuStore {
+  isOpen: boolean;
+  open: () => void;
+  close: () => void;
+}
+
 const checkLocalStorage = (): boolean => {
   const tokenExpirations = localStorage["tokenExpirations"];
   if (!tokenExpirations) return false;
@@ -23,4 +30,10 @@ export const useUserStore = create<UserStore>()((set) => ({
   // reducers
   login: () => set((state) => ({ ...state, isLoggedIn: true })),
   logout: () => set((state) => ({ ...state, isLoggedIn: false })),
+}));
+
+export const useSideMenuStore = create<SideMenuStore>()((set) => ({
+  isOpen: false,
+  open: () => set((state) => ({ ...state, isOpen: true })),
+  close: () => set((state) => ({ ...state, isOpen: false })),
 }));

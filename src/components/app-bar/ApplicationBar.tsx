@@ -1,19 +1,27 @@
 import { Menu } from "@mui/icons-material";
-import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
-import { useUserStore } from "../../store";
-import { useNavigate } from "@tanstack/react-router";
+import {
+  AppBar,
+  Button,
+  Drawer,
+  IconButton,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import { useSideMenuStore, useUserStore } from "../../store";
+import { apiLogout } from "../../api/auth-api";
+import useLogoutTrigger from "../../hooks/logout-trigger";
+import SideMenu from "../side-menu/SideMenu";
 
 const ApplicationBar = (): JSX.Element => {
+  const { open } = useSideMenuStore();
   const { logout } = useUserStore();
-  const navigate = useNavigate();
+  useLogoutTrigger();
+
   const handleLogout = () => {
-    fetch("https://localhost/api/auth/logout", {
-      method: "GET",
-      credentials: "include",
-    }).catch((err) => console.error(err));
-    localStorage.removeItem("tokenExpirations");
+    apiLogout().catch((error) => {
+      console.error(error);
+    });
     logout();
-    navigate({ to: "/login" });
   };
 
   return (
@@ -21,11 +29,13 @@ const ApplicationBar = (): JSX.Element => {
       <AppBar position="static">
         <Toolbar>
           <IconButton
+            id="side-menu"
             size="large"
             edge="start"
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
+            onClick={open}
           >
             <Menu />
           </IconButton>
@@ -42,6 +52,7 @@ const ApplicationBar = (): JSX.Element => {
             Logout
           </Button>
         </Toolbar>
+        <SideMenu />
       </AppBar>
     </>
   );

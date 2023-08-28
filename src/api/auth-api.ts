@@ -31,4 +31,9 @@ export const forbiddenPing = () =>
     credentials: "include",
   });
 
-export const apiLogout = () => {};
+export const apiLogout = () => {
+  return fetch(`${baseUrl}/auth/logout`, {
+    method: "GET",
+    credentials: "include",
+  });
+};

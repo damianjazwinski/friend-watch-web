@@ -9,7 +9,6 @@ import {
   Link,
 } from "@mui/material";
 import "./Login.scss";
-import { FormEvent } from "react";
 import { useUserStore } from "../../store";
 import { useNavigate } from "@tanstack/react-router";
 import { apiLogin } from "../../api/auth-api";
@@ -40,14 +39,16 @@ const Login = (): JSX.Element => {
         if (response.status != 200)
           return Promise.reject(await response.json());
 
-        localStorage["tokenExpirations"] = JSON.stringify(response);
+        localStorage["tokenExpirations"] = JSON.stringify(
+          await response.json()
+        );
         login();
         navigate({ to: "/" });
       })
       .catch((error: ErrorResponse) => {
         enqueueSnackbar({
           message: error.messages.join("\n"),
-          variant: "error",
+          variant: "success",
         });
         reset();
       });
