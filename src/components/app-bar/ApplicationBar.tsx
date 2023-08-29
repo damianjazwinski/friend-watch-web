@@ -2,7 +2,7 @@ import { Menu } from "@mui/icons-material";
 import {
   AppBar,
   Button,
-  Drawer,
+  CssBaseline,
   IconButton,
   Toolbar,
   Typography,
@@ -11,6 +11,7 @@ import { useSideMenuStore, useUserStore } from "../../store";
 import { apiLogout } from "../../api/auth-api";
 import useLogoutTrigger from "../../hooks/logout-trigger";
 import SideMenu from "../side-menu/SideMenu";
+import "./ApplicationBar.scss";
 
 const ApplicationBar = (): JSX.Element => {
   const { open } = useSideMenuStore();
@@ -26,7 +27,8 @@ const ApplicationBar = (): JSX.Element => {
 
   return (
     <>
-      <AppBar position="static">
+      <CssBaseline />
+      <AppBar position="static" className="application-bar">
         <Toolbar>
           <IconButton
             id="side-menu"

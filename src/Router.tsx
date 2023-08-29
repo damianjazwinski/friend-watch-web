@@ -9,6 +9,7 @@ import Register from "./pages/register/Register";
 import Login from "./pages/login/Login";
 import Home from "./pages/home/Home";
 import { useUserStore } from "./store";
+import Circles from "./pages/circles/Circles";
 
 const rootRoute = new RootRoute();
 
@@ -46,11 +47,19 @@ const indexRoute = new Route({
   beforeLoad: checkLoginFlag,
 });
 
+const circlesRoute = new Route({
+  getParentRoute: () => rootRoute,
+  component: Circles,
+  path: "/circles",
+  beforeLoad: checkLoginFlag,
+});
+
 const routeTree = rootRoute.addChildren([
   homeRoute,
   registerRoute,
   loginRoute,
   indexRoute,
+  circlesRoute,
 ]);
 
 const router = new Router({ routeTree });
