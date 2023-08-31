@@ -4,7 +4,10 @@ const apiRequestHandler = new ApiRequestHandler();
 
 export const baseUrl = "https://localhost/api";
 
-export const fetchApi = (endpoint: string, options: RequestInit) => {
+export const fetchApi = (
+  endpoint: string,
+  options: RequestInit
+): Promise<any> => {
   return apiRequestHandler.executeFetch({
     url: `${baseUrl}${endpoint}`,
     options,

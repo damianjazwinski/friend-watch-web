@@ -3,7 +3,7 @@ import { useUserStore } from "../store";
 import { enqueueSnackbar } from "notistack";
 
 interface PromiseGuts {
-  resolve: (value: unknown) => void;
+  resolve: (value: any) => void;
   reject: (reason?: any) => void;
   options: RequestInit;
   url: string;
@@ -18,7 +18,7 @@ class ApiRequestHandler {
       ({ resolve, reject, options, url }: PromiseGuts) => {
         fetch(url, options).then(async (response) => {
           if (response.ok) resolve(await response.json());
-          else reject(await response.text());
+          else reject(await response.json());
         });
       }
     );
@@ -60,7 +60,7 @@ class ApiRequestHandler {
             await this.refreshToken();
             this.isPaused = false;
             await this.executeRequests();
-          } else reject(await response.text());
+          } else reject(await response.json());
         });
       }
     });

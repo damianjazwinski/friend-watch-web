@@ -1,103 +1,114 @@
-import { useNavigate } from "@tanstack/react-router";
 import ApplicationBar from "../../components/app-bar/ApplicationBar";
 import useLogoutTrigger from "../../hooks/logout-trigger";
 import {
   Box,
-  Breadcrumbs,
   Button,
   Card,
-  CardActions,
-  CardContent,
   CardMedia,
   Container,
-  Link,
   Typography,
 } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
 import "./Circles.scss";
+import AddIcon from "@mui/icons-material/Add";
 
 const Circles = (): JSX.Element => {
   useLogoutTrigger();
-  const navigate = useNavigate();
-  const breadcrumbsHomehandler = () => navigate({ to: "/" });
   return (
     <>
       <ApplicationBar />
-      <Breadcrumbs aria-label="breadcrumb">
-        <Link
-          underline="hover"
-          sx={{ display: "flex", alignItems: "center" }}
-          color="inherit"
-          onClick={breadcrumbsHomehandler}
-        >
-          <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-          Home
-        </Link>
-        <Typography color="text.primary">Circles</Typography>
-      </Breadcrumbs>
-
-      <Container maxWidth="xl" sx={{ border: "1px solid black" }}>
+      <Container
+        maxWidth="xl"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: { xs: "center", sm: "flex-start" },
+        }}
+      >
         <Box
           component="div"
           sx={{
-            border: "1px solid black",
             display: "inline-flex",
             flexDirection: "row",
-            gap: "2em",
+            gap: "1em",
             flexWrap: "wrap",
-            justifyContent: "space-evenly",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <Card sx={{ maxWidth: 345 }}>
-            <CardMedia
-              sx={{ height: 140 }}
-              image="circle_card_photo.png"
-              title="green iguana"
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                Circle name 1
+          <Button>
+            <Card sx={{ width: 300 }}>
+              <CardMedia
+                sx={{
+                  height: 150,
+                  display: "grid",
+                  placeItems: "center",
+                  padding: "0.5em",
+                }}
+                image="circle_card_photo.png"
+                title="green iguana"
+              >
+                <Typography
+                  variant="h5"
+                  component="div"
+                  sx={{ textTransform: "none", fontWeight: 1000, fontSize: 41 }}
+                >
+                  Buddies
+                </Typography>
+              </CardMedia>
+            </Card>
+          </Button>
+          <Button>
+            <Card
+              sx={{
+                width: 300,
+                height: 185,
+                display: "grid",
+                placeItems: "center",
+                padding: "0.5em",
+              }}
+            >
+              <CardMedia
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  filter: "blur(3px)",
+                  scale: "1.1",
+                  gridRow: "1/2",
+                  gridColumn: "1/2",
+                }}
+                image="biznes-ludzie-grupa-ludzi.jpg"
+              ></CardMedia>
+              <Typography
+                variant="h5"
+                component="div"
+                sx={{
+                  textTransform: "none",
+                  fontWeight: 1000,
+                  fontSize: 41,
+                  alignSelf: "end",
+                  gridRow: "1/2",
+                  gridColumn: "1/2",
+                  zIndex: 1,
+                }}
+              >
+                Buddies
               </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small">Delete</Button>
-              <Button size="small">View members</Button>
-            </CardActions>
-          </Card>
-
-          <Card sx={{ maxWidth: 345 }}>
-            <CardMedia
-              sx={{ height: 140 }}
-              image="circle_card_photo.png"
-              title="green iguana"
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                Circle name 1
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small">Delete</Button>
-              <Button size="small">View members</Button>
-            </CardActions>
-          </Card>
-
-          <Card sx={{ maxWidth: 345 }}>
-            <CardMedia
-              sx={{ height: 140 }}
-              image="circle_card_photo.png"
-              title="green iguana"
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                Circle name 1
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small">Delete</Button>
-              <Button size="small">View members</Button>
-            </CardActions>
-          </Card>
+            </Card>
+          </Button>
+          <Button>
+            <Box></Box>
+            <Card
+              sx={{
+                width: 300,
+                height: 185,
+                display: "grid",
+                placeItems: "center",
+                padding: "0.5em",
+              }}
+            >
+              <AddIcon fontSize="large" />
+            </Card>
+          </Button>
         </Box>
       </Container>
     </>

@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { devtools } from "zustand/middleware";
 
 interface UserStore {
   isLoggedIn: boolean;
@@ -6,6 +7,7 @@ interface UserStore {
   id: number;
   login: () => void;
   logout: () => void;
+  setUserData: (id: number, username: string) => void;
 }
 
 interface SideMenuStore {
@@ -22,18 +24,23 @@ const checkLocalStorage = (): boolean => {
   return Date.now() < refreshTokenExpiration;
 };
 
-export const useUserStore = create<UserStore>()((set) => ({
-  // global state
-  isLoggedIn: checkLocalStorage(),
-  username: "",
-  id: 0,
-  // reducers
-  login: () => set((state) => ({ ...state, isLoggedIn: true })),
-  logout: () => set((state) => ({ ...state, isLoggedIn: false })),
-}));
+export const useUserStore = create<UserStore>()(
+  devtools((set) => ({
+    // global state
+    isLoggedIn: checkLocalStorage(),
+    username: "",
+    id: 0,
+    // reducers
+    login: () => set(() => ({ isLoggedIn: true })),
+    logout: () => set(() => ({ isLoggedIn: false, username: "", id: 0 })),
+    setUserData: (id, username) => set(() => ({ id, username })),
+  }))
+);
 
-export const useSideMenuStore = create<SideMenuStore>()((set) => ({
-  isOpen: false,
-  open: () => set((state) => ({ ...state, isOpen: true })),
-  close: () => set((state) => ({ ...state, isOpen: false })),
-}));
+export const useSideMenuStore = create<SideMenuStore>()(
+  devtools((set) => ({
+    isOpen: false,
+    open: () => set(() => ({ isOpen: true })),
+    close: () => set(() => ({ isOpen: false })),
+  }))
+);

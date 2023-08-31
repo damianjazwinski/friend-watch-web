@@ -1,8 +1,10 @@
 import {
+  Avatar,
   Box,
   Divider,
   List,
   ListItem,
+  ListItemAvatar,
   ListItemButton,
   ListItemIcon,
   ListItemText,
@@ -10,8 +12,10 @@ import {
   Typography,
 } from "@mui/material";
 import "./SideMenu.scss";
-import { useSideMenuStore } from "../../store";
+import { useSideMenuStore, useUserStore } from "../../store";
+import { apiLogout } from "../../api/auth-api";
 import HomeIcon from "@mui/icons-material/Home";
+import LogoutIcon from "@mui/icons-material/Logout";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import { useNavigate } from "@tanstack/react-router";
@@ -24,7 +28,9 @@ interface SideMenuItem {
 
 const SideMenu = (): JSX.Element => {
   const { isOpen, close, open } = useSideMenuStore();
+  const { username } = useUserStore();
   const navigate = useNavigate();
+  const { logout } = useUserStore();
 
   const homeButtonHandler = () => {
     navigate({ to: "/" });
@@ -41,10 +47,30 @@ const SideMenu = (): JSX.Element => {
     close();
   };
 
+  const handleLogout = () => {
+    apiLogout().catch((error) => {
+      console.error(error);
+    });
+    close();
+    logout();
+  };
+
   return (
     <SwipeableDrawer anchor="left" open={isOpen} onClose={close} onOpen={open}>
-      <Box p={1} width={250}>
-        <List>
+      <Box width={250}>
+        <List
+          sx={{ display: "flex", flexDirection: "column", height: "100dvh" }}
+          disablePadding
+        >
+          <ListItem key="profile" disablePadding>
+            <ListItemButton>
+              <ListItemAvatar>
+                <Avatar alt="Remy Sharp" src="1.png" />
+              </ListItemAvatar>
+              <ListItemText primary={username} />
+            </ListItemButton>
+          </ListItem>
+          <Divider />
           <ListItem key="home" disablePadding>
             <ListItemButton onClick={homeButtonHandler}>
               <ListItemIcon>
@@ -67,6 +93,15 @@ const SideMenu = (): JSX.Element => {
                 <OndemandVideoIcon />
               </ListItemIcon>
               <ListItemText primary="Watches" />
+            </ListItemButton>
+          </ListItem>
+          <Divider sx={{ marginTop: "auto" }} />
+          <ListItem key="logout" disablePadding>
+            <ListItemButton onClick={handleLogout}>
+              <ListItemIcon>
+                <LogoutIcon />
+              </ListItemIcon>
+              <ListItemText primary="Logout" />
             </ListItemButton>
           </ListItem>
         </List>

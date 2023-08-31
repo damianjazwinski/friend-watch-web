@@ -12,6 +12,7 @@ import "./Login.scss";
 import { useUserStore } from "../../store";
 import { useNavigate } from "@tanstack/react-router";
 import { apiLogin } from "../../api/auth-api";
+import { apiGetUser } from "../../api/user-api";
 import { ErrorResponse } from "../../api/api-tool";
 import { useForm, SubmitHandler } from "react-hook-form"; // TODO: add this, and snackbar
 import { useSnackbar } from "notistack";
@@ -29,7 +30,7 @@ const Login = (): JSX.Element => {
     reset,
   } = useForm<LoginInputs>();
 
-  const { login } = useUserStore();
+  const { login, setUserData } = useUserStore();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -48,7 +49,7 @@ const Login = (): JSX.Element => {
       .catch((error: ErrorResponse) => {
         enqueueSnackbar({
           message: error.messages.join("\n"),
-          variant: "success",
+          variant: "error",
         });
         reset();
       });
@@ -116,7 +117,9 @@ const Login = (): JSX.Element => {
               <Grid container justifyContent="flex-end">
                 <Grid item>
                   <Link href="/register" variant="body2">
-                    Don't have an account? Sign up
+                    <Typography component="span">
+                      Don't have an account? Sign up
+                    </Typography>
                   </Link>
                 </Grid>
               </Grid>

@@ -1,29 +1,20 @@
 import { Menu } from "@mui/icons-material";
 import {
   AppBar,
-  Button,
   CssBaseline,
   IconButton,
   Toolbar,
   Typography,
 } from "@mui/material";
-import { useSideMenuStore, useUserStore } from "../../store";
-import { apiLogout } from "../../api/auth-api";
+import { useSideMenuStore } from "../../store";
+
 import useLogoutTrigger from "../../hooks/logout-trigger";
 import SideMenu from "../side-menu/SideMenu";
 import "./ApplicationBar.scss";
 
 const ApplicationBar = (): JSX.Element => {
   const { open } = useSideMenuStore();
-  const { logout } = useUserStore();
   useLogoutTrigger();
-
-  const handleLogout = () => {
-    apiLogout().catch((error) => {
-      console.error(error);
-    });
-    logout();
-  };
 
   return (
     <>
@@ -49,10 +40,6 @@ const ApplicationBar = (): JSX.Element => {
           >
             FriendWatch
           </Typography>
-
-          <Button color="inherit" variant="text" onClick={handleLogout}>
-            Logout
-          </Button>
         </Toolbar>
         <SideMenu />
       </AppBar>
