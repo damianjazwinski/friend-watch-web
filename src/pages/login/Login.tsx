@@ -12,9 +12,8 @@ import "./Login.scss";
 import { useUserStore } from "../../store";
 import { useNavigate } from "@tanstack/react-router";
 import { apiLogin } from "../../api/auth-api";
-import { apiGetUser } from "../../api/user-api";
 import { ErrorResponse } from "../../api/api-tool";
-import { useForm, SubmitHandler } from "react-hook-form"; // TODO: add this, and snackbar
+import { useForm, SubmitHandler } from "react-hook-form";
 import { useSnackbar } from "notistack";
 
 interface LoginInputs {
@@ -30,7 +29,7 @@ const Login = (): JSX.Element => {
     reset,
   } = useForm<LoginInputs>();
 
-  const { login, setUserData } = useUserStore();
+  const { login } = useUserStore();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 

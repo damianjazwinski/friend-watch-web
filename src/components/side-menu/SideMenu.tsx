@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  Collapse,
   Divider,
   List,
   ListItem,
@@ -9,7 +10,7 @@ import {
   ListItemIcon,
   ListItemText,
   SwipeableDrawer,
-  Typography,
+  useTheme,
 } from "@mui/material";
 import "./SideMenu.scss";
 import { useSideMenuStore, useUserStore } from "../../store";
@@ -19,44 +20,64 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import { useNavigate } from "@tanstack/react-router";
-
-interface SideMenuItem {
-  name: string;
-  key: string;
-  clickHandler: (path: string) => void;
-}
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
 const SideMenu = (): JSX.Element => {
-  const { isOpen, close, open } = useSideMenuStore();
+  const {
+    isDrawerOpen,
+    isCircleSubmenuOpen,
+    closeDrawer,
+    openDrawer,
+    openCircleSubmenu,
+    closeCircleSubmenu,
+  } = useSideMenuStore();
   const { username } = useUserStore();
   const navigate = useNavigate();
   const { logout } = useUserStore();
+  const theme = useTheme();
 
   const homeButtonHandler = () => {
     navigate({ to: "/" });
-    close();
+    closeDrawer();
   };
 
   const circlesButtonHandler = () => {
-    navigate({ to: "/circles" });
-    close();
+    // navigate({ to: "/circles" });
+    if (!isCircleSubmenuOpen) openCircleSubmenu();
+    else closeCircleSubmenu();
+
+    // closeDrawer();
+  };
+  const joinedCirclesButtonHandler = () => {
+    navigate({ to: "/circles/joined" });
+    closeDrawer();
+  };
+
+  const ownedCirclesButtonHandler = () => {
+    navigate({ to: "/circles/owned" });
+    closeDrawer();
   };
 
   const watchesButtonHandler = () => {
     navigate({ to: "/watches" });
-    close();
+    closeDrawer();
   };
 
   const handleLogout = () => {
     apiLogout().catch((error) => {
       console.error(error);
     });
-    close();
+    closeDrawer();
     logout();
   };
 
   return (
-    <SwipeableDrawer anchor="left" open={isOpen} onClose={close} onOpen={open}>
+    <SwipeableDrawer
+      anchor="left"
+      open={isDrawerOpen}
+      onClose={closeDrawer}
+      onOpen={openDrawer}
+    >
       <Box width={250}>
         <List
           sx={{ display: "flex", flexDirection: "column", height: "100dvh" }}
@@ -65,11 +86,15 @@ const SideMenu = (): JSX.Element => {
           <ListItem key="profile" disablePadding>
             <ListItemButton>
               <ListItemAvatar>
-                <Avatar alt="Remy Sharp" src="1.png" />
+                <Avatar alt="Avatar" src="/2.png?url" />
               </ListItemAvatar>
-              <ListItemText primary={username} />
+              <ListItemText
+                primaryTypographyProps={{ sx: { fontWeight: 800 } }}
+                primary={`Hello, ${username}!`}
+              />
             </ListItemButton>
           </ListItem>
+          {/**/}
           <Divider />
           <ListItem key="home" disablePadding>
             <ListItemButton onClick={homeButtonHandler}>
@@ -79,14 +104,47 @@ const SideMenu = (): JSX.Element => {
               <ListItemText primary="Home" />
             </ListItemButton>
           </ListItem>
+          {/**/}
           <ListItem key="circles" disablePadding>
             <ListItemButton onClick={circlesButtonHandler}>
               <ListItemIcon>
                 <Diversity3Icon />
               </ListItemIcon>
               <ListItemText primary="Circles" />
+              {isCircleSubmenuOpen ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
           </ListItem>
+          {/**/}
+          <Collapse in={isCircleSubmenuOpen} timeout="auto" unmountOnExit>
+            <Divider />
+            <List component="div" disablePadding>
+              <ListItem
+                key="joinded-circles"
+                disablePadding
+                sx={{
+                  backgroundColor: theme.palette.background.default,
+                }}
+              >
+                <ListItemButton onClick={joinedCirclesButtonHandler}>
+                  <ListItemText primary="Joined" />
+                </ListItemButton>
+              </ListItem>
+              {/**/}
+              <ListItem
+                divider
+                key="owned-circles"
+                disablePadding
+                sx={{
+                  backgroundColor: theme.palette.background.default,
+                }}
+              >
+                <ListItemButton onClick={ownedCirclesButtonHandler}>
+                  <ListItemText primary="Owned" />
+                </ListItemButton>
+              </ListItem>
+            </List>
+          </Collapse>
+          {/**/}
           <ListItem key="watches" disablePadding>
             <ListItemButton onClick={watchesButtonHandler}>
               <ListItemIcon>
@@ -95,6 +153,7 @@ const SideMenu = (): JSX.Element => {
               <ListItemText primary="Watches" />
             </ListItemButton>
           </ListItem>
+          {/**/}
           <Divider sx={{ marginTop: "auto" }} />
           <ListItem key="logout" disablePadding>
             <ListItemButton onClick={handleLogout}>

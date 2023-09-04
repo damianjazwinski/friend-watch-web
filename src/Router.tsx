@@ -8,8 +8,11 @@ import {
 import Register from "./pages/register/Register";
 import Login from "./pages/login/Login";
 import Home from "./pages/home/Home";
+import NotFound from "./pages/not-found/NotFound";
 import { useUserStore } from "./store";
-import Circles from "./pages/circles/Circles";
+import JoinedCircles from "./pages/circles/JoinedCircles";
+import OwnedCircles from "./pages/circles/OwnedCircles";
+import CreateCircle from "./pages/circles/CreateCircle";
 
 const rootRoute = new RootRoute();
 
@@ -20,6 +23,13 @@ const checkLoginFlag = () => {
       to: "/login",
     });
 };
+
+const invalidRoute = new Route({
+  getParentRoute: () => rootRoute,
+  component: NotFound,
+  beforeLoad: checkLoginFlag,
+  path: "*",
+});
 
 const registerRoute = new Route({
   getParentRoute: () => rootRoute,
@@ -47,10 +57,24 @@ const indexRoute = new Route({
   beforeLoad: checkLoginFlag,
 });
 
-const circlesRoute = new Route({
+const joinedCirclesRoute = new Route({
   getParentRoute: () => rootRoute,
-  component: Circles,
-  path: "/circles",
+  component: JoinedCircles,
+  path: "/circles/joined",
+  beforeLoad: checkLoginFlag,
+});
+
+const ownedCirclesRoute = new Route({
+  getParentRoute: () => rootRoute,
+  component: OwnedCircles,
+  path: "/circles/owned",
+  beforeLoad: checkLoginFlag,
+});
+
+const createCircleRoute = new Route({
+  getParentRoute: () => rootRoute,
+  component: CreateCircle,
+  path: "/circles/create",
   beforeLoad: checkLoginFlag,
 });
 
@@ -59,7 +83,10 @@ const routeTree = rootRoute.addChildren([
   registerRoute,
   loginRoute,
   indexRoute,
-  circlesRoute,
+  joinedCirclesRoute,
+  ownedCirclesRoute,
+  createCircleRoute,
+  invalidRoute,
 ]);
 
 const router = new Router({ routeTree });

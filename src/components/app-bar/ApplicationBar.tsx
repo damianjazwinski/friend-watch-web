@@ -13,13 +13,17 @@ import SideMenu from "../side-menu/SideMenu";
 import "./ApplicationBar.scss";
 
 const ApplicationBar = (): JSX.Element => {
-  const { open } = useSideMenuStore();
+  const { openDrawer } = useSideMenuStore();
   useLogoutTrigger();
 
   return (
     <>
       <CssBaseline />
-      <AppBar position="static" className="application-bar">
+      <AppBar
+        position="static"
+        className="application-bar"
+        sx={{ minWidth: "300px" }}
+      >
         <Toolbar>
           <IconButton
             id="side-menu"
@@ -28,7 +32,7 @@ const ApplicationBar = (): JSX.Element => {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-            onClick={open}
+            onClick={openDrawer}
           >
             <Menu />
           </IconButton>
