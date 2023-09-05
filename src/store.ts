@@ -1,5 +1,11 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+import { ICircle } from "./types";
+
+interface CircleStore {
+  owned: ICircle[];
+  setOwned: (circles: ICircle[]) => void;
+}
 
 interface UserStore {
   isLoggedIn: boolean;
@@ -48,5 +54,12 @@ export const useSideMenuStore = create<SideMenuStore>()(
     closeDrawer: () => set(() => ({ isDrawerOpen: false })),
     openCircleSubmenu: () => set(() => ({ isCircleSubmenuOpen: true })),
     closeCircleSubmenu: () => set(() => ({ isCircleSubmenuOpen: false })),
+  }))
+);
+
+export const useCircleStore = create<CircleStore>()(
+  devtools((set) => ({
+    owned: [],
+    setOwned: (circles) => set(() => ({ owned: circles })),
   }))
 );

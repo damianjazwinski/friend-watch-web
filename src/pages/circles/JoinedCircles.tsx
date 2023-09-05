@@ -19,11 +19,7 @@ const JoinedCircles = (): JSX.Element => {
             alignItems: "center",
             justifyContent: "left",
           }}
-        >
-          <Circle />
-          <Circle />
-          <Circle />
-        </Box>
+        ></Box>
       </Container>
     </>
   );

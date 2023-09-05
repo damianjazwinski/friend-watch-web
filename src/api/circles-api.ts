@@ -1,3 +1,4 @@
+import { ICircle } from "../types";
 import { fetchApi } from "./api-tool";
 
 export const apiCreateCircle = (
@@ -12,5 +13,12 @@ export const apiCreateCircle = (
     method: "POST",
     credentials: "include",
     body: formData,
+  });
+};
+
+export const apiGetOwnedCircles = (): Promise<{ ownedCircles: ICircle[] }> => {
+  return fetchApi("/circle/owned", {
+    method: "GET",
+    credentials: "include",
   });
 };

@@ -6,8 +6,13 @@ import {
   CardMedia,
   Typography,
 } from "@mui/material";
+import { ICircle } from "../../../types";
 
-const Circle = (): JSX.Element => {
+interface CircleProps {
+  circle: ICircle;
+}
+
+const Circle = ({ circle }: CircleProps): JSX.Element => {
   return (
     <>
       <Card
@@ -32,7 +37,7 @@ const Circle = (): JSX.Element => {
 
           <CardContent sx={{ padding: "4px 10px" }}>
             <Typography variant="h6" component="div">
-              Buddies
+              {circle.name}
             </Typography>
           </CardContent>
         </CardActionArea>
