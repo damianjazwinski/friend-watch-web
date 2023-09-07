@@ -1,5 +1,9 @@
 export interface ICircle {
   id: number;
   name: string;
-  imagePath?: string;
+  imageFile?: IImageFile;
+}
+
+export interface IImageFile {
+  url: string;
 }

@@ -30,7 +30,7 @@ const Circle = ({ circle }: CircleProps): JSX.Element => {
           >
             <CardMedia
               component="img"
-              image="/biznes-ludzie-grupa-ludzi.jpg?url"
+              image={circle.imageFile?.url}
               height="100"
             />
           </Box>

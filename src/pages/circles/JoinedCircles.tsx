@@ -2,9 +2,11 @@ import ApplicationBar from "../../components/app-bar/ApplicationBar";
 import useLogoutTrigger from "../../hooks/logout-trigger";
 import { Box, Container } from "@mui/material";
 import Circle from "./components/Circle";
+import { useCircleStore } from "../../store";
 
 const JoinedCircles = (): JSX.Element => {
   useLogoutTrigger();
+  //const { joined } = useCircleStore();
   return (
     <>
       <ApplicationBar />

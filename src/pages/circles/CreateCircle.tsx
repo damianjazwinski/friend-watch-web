@@ -18,6 +18,7 @@ import { useSnackbar } from "notistack";
 import { apiCreateCircle } from "../../api/circles-api";
 import { ErrorResponse } from "../../api/api-tool";
 import { PhotoCamera } from "@mui/icons-material";
+import { useNavigate } from "@tanstack/react-router";
 
 interface CreateCircleInputs {
   name: string;
@@ -28,6 +29,7 @@ const CreateCircle = (): JSX.Element => {
   useLogoutTrigger();
   const [pictureName, setPictureName] = useState("Add circle picture");
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -42,11 +44,9 @@ const CreateCircle = (): JSX.Element => {
 
   const onSubmit: SubmitHandler<CreateCircleInputs> = (data) => {
     apiCreateCircle(data.name, data.circleImage[0])
-      .then(async (response) => {
-        console.log(response);
-        if (!response.ok) return Promise.reject(await response.json());
-
+      .then(() => {
         enqueueSnackbar("Circle created", { variant: "success" });
+        navigate({ to: "/circles/owned" });
       })
       .catch((error: ErrorResponse) => {
         setError("name", {
