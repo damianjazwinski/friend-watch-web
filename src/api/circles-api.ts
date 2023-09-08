@@ -22,3 +22,12 @@ export const apiGetOwnedCircles = (): Promise<{ ownedCircles: ICircle[] }> => {
     credentials: "include",
   });
 };
+
+export const apiGetOwnedCircle = (
+  circleId: number | string
+): Promise<{ circle: ICircle }> => {
+  return fetchApi(`/circle/owned/${circleId}`, {
+    method: "GET",
+    credentials: "include",
+  });
+};

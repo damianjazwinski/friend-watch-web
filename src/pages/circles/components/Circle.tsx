@@ -7,21 +7,25 @@ import {
   Typography,
 } from "@mui/material";
 import { ICircle } from "../../../types";
+import { useNavigate } from "@tanstack/react-router";
 
 interface CircleProps {
   circle: ICircle;
 }
 
 const Circle = ({ circle }: CircleProps): JSX.Element => {
+  const navigate = useNavigate();
+  const onClick = () => navigate({ to: `/circles/owned/${circle.id}` });
   return (
     <>
       <Card
+        elevation={10}
         square
         sx={{
           width: 200,
         }}
       >
-        <CardActionArea>
+        <CardActionArea onClick={onClick}>
           <Box
             component="div"
             sx={{
@@ -30,7 +34,7 @@ const Circle = ({ circle }: CircleProps): JSX.Element => {
           >
             <CardMedia
               component="img"
-              image={circle.imageFile?.url}
+              image={circle.imageFile?.url ?? "/circle_card_photo.png"}
               height="100"
             />
           </Box>

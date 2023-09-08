@@ -1,12 +1,10 @@
 import { useState } from "react";
+import { v4 } from "uuid";
 import {
   Box,
   Button,
   Container,
   CssBaseline,
-  IconButton,
-  Input,
-  Stack,
   TextField,
   Typography,
 } from "@mui/material";
@@ -19,6 +17,8 @@ import { apiCreateCircle } from "../../api/circles-api";
 import { ErrorResponse } from "../../api/api-tool";
 import { PhotoCamera } from "@mui/icons-material";
 import { useNavigate } from "@tanstack/react-router";
+import { ICircle } from "../../types";
+import { useCircleStore } from "../../store";
 
 interface CreateCircleInputs {
   name: string;
@@ -28,6 +28,7 @@ interface CreateCircleInputs {
 const CreateCircle = (): JSX.Element => {
   useLogoutTrigger();
   const [pictureName, setPictureName] = useState("Add circle picture");
+  const { owned, setOwned } = useCircleStore();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const {
@@ -38,13 +39,23 @@ const CreateCircle = (): JSX.Element => {
   } = useForm<CreateCircleInputs>();
 
   const onChange: ChangeHandler = async (event) => {
-    console.log(event);
     setPictureName(event.target.files[0].name);
   };
 
   const onSubmit: SubmitHandler<CreateCircleInputs> = (data) => {
     apiCreateCircle(data.name, data.circleImage[0])
       .then(() => {
+        const newCircle: ICircle = {
+          id: v4(),
+          imageFile: {
+            url: data.circleImage[0]
+              ? URL.createObjectURL(data.circleImage[0])
+              : "/circle_card_photo.png",
+          },
+          name: data.name,
+        };
+        setOwned([...owned, newCircle]);
+
         enqueueSnackbar("Circle created", { variant: "success" });
         navigate({ to: "/circles/owned" });
       })

@@ -4,7 +4,9 @@ import { ICircle } from "./types";
 
 interface CircleStore {
   owned: ICircle[];
+  circleWithMembers: ICircle;
   setOwned: (circles: ICircle[]) => void;
+  setCircleWithMembers: (circle: ICircle) => void;
 }
 
 interface UserStore {
@@ -60,6 +62,9 @@ export const useSideMenuStore = create<SideMenuStore>()(
 export const useCircleStore = create<CircleStore>()(
   devtools((set) => ({
     owned: [],
+    circleWithMembers: {} as ICircle,
     setOwned: (circles) => set(() => ({ owned: circles })),
+    setCircleWithMembers: (circle) =>
+      set(() => ({ circleWithMembers: circle })),
   }))
 );

@@ -13,6 +13,7 @@ import { useUserStore } from "./store";
 import JoinedCircles from "./pages/circles/JoinedCircles";
 import OwnedCircles from "./pages/circles/OwnedCircles";
 import CreateCircle from "./pages/circles/CreateCircle";
+import OwnCircle from "./pages/circles/pages/OwnCircle";
 
 const rootRoute = new RootRoute();
 
@@ -71,6 +72,13 @@ const ownedCirclesRoute = new Route({
   beforeLoad: checkLoginFlag,
 });
 
+const ownCircleRoute = new Route({
+  getParentRoute: () => rootRoute,
+  component: OwnCircle,
+  path: "/circles/owned/$circleId",
+  beforeLoad: checkLoginFlag,
+});
+
 const createCircleRoute = new Route({
   getParentRoute: () => rootRoute,
   component: CreateCircle,
@@ -84,7 +92,7 @@ const routeTree = rootRoute.addChildren([
   loginRoute,
   indexRoute,
   joinedCirclesRoute,
-  ownedCirclesRoute,
+  ownedCirclesRoute.addChildren([ownCircleRoute]),
   createCircleRoute,
   invalidRoute,
 ]);
