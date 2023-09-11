@@ -14,6 +14,7 @@ import JoinedCircles from "./pages/circles/JoinedCircles";
 import OwnedCircles from "./pages/circles/OwnedCircles";
 import CreateCircle from "./pages/circles/CreateCircle";
 import OwnCircle from "./pages/circles/pages/OwnCircle";
+import Invitations from "./pages/invitations/Invitations";
 
 const rootRoute = new RootRoute();
 
@@ -86,6 +87,13 @@ const createCircleRoute = new Route({
   beforeLoad: checkLoginFlag,
 });
 
+const invitationsRoute = new Route({
+  getParentRoute: () => rootRoute,
+  component: Invitations,
+  path: "/invitations",
+  beforeLoad: checkLoginFlag,
+});
+
 const routeTree = rootRoute.addChildren([
   homeRoute,
   registerRoute,
@@ -94,6 +102,7 @@ const routeTree = rootRoute.addChildren([
   joinedCirclesRoute,
   ownedCirclesRoute.addChildren([ownCircleRoute]),
   createCircleRoute,
+  invitationsRoute,
   invalidRoute,
 ]);
 

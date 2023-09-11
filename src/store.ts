@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { ICircle } from "./types";
 
+// TODO: Add invitations store
 interface CircleStore {
   owned: ICircle[];
   circleWithMembers: ICircle;

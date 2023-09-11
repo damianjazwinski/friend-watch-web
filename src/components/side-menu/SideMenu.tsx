@@ -19,6 +19,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import { useNavigate } from "@tanstack/react-router";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
@@ -60,6 +61,11 @@ const SideMenu = (): JSX.Element => {
 
   const watchesButtonHandler = () => {
     navigate({ to: "/watches" });
+    closeDrawer();
+  };
+
+  const invitationsButtonHandler = () => {
+    navigate({ to: "/invitations" });
     closeDrawer();
   };
 
@@ -151,6 +157,15 @@ const SideMenu = (): JSX.Element => {
                 <OndemandVideoIcon />
               </ListItemIcon>
               <ListItemText primary="Watches" />
+            </ListItemButton>
+          </ListItem>
+          {/**/}
+          <ListItem key="invitations" disablePadding>
+            <ListItemButton onClick={invitationsButtonHandler}>
+              <ListItemIcon>
+                <GroupAddIcon />
+              </ListItemIcon>
+              <ListItemText primary="Invitations" />
             </ListItemButton>
           </ListItem>
           {/**/}
