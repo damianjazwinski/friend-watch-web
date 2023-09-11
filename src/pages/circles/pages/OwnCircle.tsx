@@ -1,10 +1,8 @@
 import {
   Avatar,
   Box,
-  Button,
   Container,
   CssBaseline,
-  Divider,
   IconButton,
   List,
   ListItem,
@@ -21,14 +19,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { useEffect } from "react";
 import { apiGetOwnedCircle } from "../../../api/circles-api";
-import { useCircleStore } from "../../../store";
+import { useCircleStore, useInvitationStore } from "../../../store";
 import { ErrorResponse } from "../../../api/api-tool";
 import { useSnackbar } from "notistack";
 import {
   apiCreateInvitation,
-  apiCreateInvitationLink,
+  apiGetInvitations,
 } from "../../../api/invitation-api";
-import clipboardCopy from "clipboard-copy";
 import { SubmitHandler, useForm } from "react-hook-form";
 import useLogoutTrigger from "../../../hooks/logout-trigger";
 
@@ -36,6 +33,7 @@ const OwnCircle = (): JSX.Element => {
   useLogoutTrigger();
   const { circleId } = useParams();
   const { circleWithMembers, setCircleWithMembers } = useCircleStore();
+  const { setSent, setReceived } = useInvitationStore();
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -43,7 +41,6 @@ const OwnCircle = (): JSX.Element => {
     register,
     handleSubmit,
     formState: { errors },
-    setError,
   } = useForm<{ username: string }>();
 
   useEffect(() => {
@@ -57,27 +54,26 @@ const OwnCircle = (): JSX.Element => {
   }, []);
 
   const onSubmit: SubmitHandler<{ username: string }> = (data) => {
-    console.log(data.username);
     reset();
     apiCreateInvitation(Number.parseInt(circleId!), data.username)
       .then(() => {
+        apiGetInvitations()
+          .then(({ sentInvitations, receivedInvitations }) => {
+            setSent(sentInvitations);
+            setReceived(receivedInvitations);
+          })
+          .catch((error: ErrorResponse) => {
+            enqueueSnackbar({
+              message: error.messages.join("\n"),
+              variant: "error",
+            });
+          });
         enqueueSnackbar("Invitation send", { variant: "success" });
       })
       .catch((error: ErrorResponse) => {
         enqueueSnackbar(error.messages.join("\n"), { variant: "error" });
       });
   };
-
-  //   const createInvitationLinkHandler = () => {
-  //     apiCreateInvitationLink(Number.parseInt(circleId!)).then(({ link }) => {
-  //       clipboardCopy(link).catch(() => {
-  //         enqueueSnackbar("Copy to clipboard failed", { variant: "error" });
-  //       });
-  //       enqueueSnackbar("Invitation link copied to clipboard", {
-  //         variant: "info",
-  //       });
-  //     });
-  //   };
 
   return (
     <>

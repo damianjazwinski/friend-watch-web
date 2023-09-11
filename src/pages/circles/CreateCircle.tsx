@@ -13,7 +13,7 @@ import useLogoutTrigger from "../../hooks/logout-trigger";
 
 import { ChangeHandler, SubmitHandler, useForm } from "react-hook-form";
 import { useSnackbar } from "notistack";
-import { apiCreateCircle } from "../../api/circles-api";
+import { apiCreateCircle, apiGetOwnedCircles } from "../../api/circles-api";
 import { ErrorResponse } from "../../api/api-tool";
 import { PhotoCamera } from "@mui/icons-material";
 import { useNavigate } from "@tanstack/react-router";
@@ -57,6 +57,16 @@ const CreateCircle = (): JSX.Element => {
         setOwned([...owned, newCircle]);
 
         enqueueSnackbar("Circle created", { variant: "success" });
+        apiGetOwnedCircles()
+          .then((response) => {
+            setOwned(response.ownedCircles);
+          })
+          .catch((error: ErrorResponse) => {
+            enqueueSnackbar({
+              message: error.messages.join("\n"),
+              variant: "error",
+            });
+          });
         navigate({ to: "/circles/owned" });
       })
       .catch((error: ErrorResponse) => {

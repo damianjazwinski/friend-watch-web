@@ -6,7 +6,7 @@ import { useCircleStore } from "../../store";
 
 const JoinedCircles = (): JSX.Element => {
   useLogoutTrigger();
-  //const { joined } = useCircleStore();
+  const { joined } = useCircleStore();
   return (
     <>
       <ApplicationBar />
@@ -21,7 +21,11 @@ const JoinedCircles = (): JSX.Element => {
             alignItems: "center",
             justifyContent: "left",
           }}
-        ></Box>
+        >
+          {joined.map((circle) => (
+            <Circle key={circle.id} circle={circle} />
+          ))}
+        </Box>
       </Container>
     </>
   );

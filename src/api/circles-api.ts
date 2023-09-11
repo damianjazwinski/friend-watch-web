@@ -23,6 +23,15 @@ export const apiGetOwnedCircles = (): Promise<{ ownedCircles: ICircle[] }> => {
   });
 };
 
+export const apiGetJoinedCircles = (): Promise<{
+  joinedCircles: ICircle[];
+}> => {
+  return fetchApi("/circle/joined", {
+    method: "GET",
+    credentials: "include",
+  });
+};
+
 export const apiGetOwnedCircle = (
   circleId: number | string
 ): Promise<{ circle: ICircle }> => {
