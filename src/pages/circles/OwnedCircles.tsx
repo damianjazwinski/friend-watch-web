@@ -1,4 +1,4 @@
-import { Box, Container, Fab } from "@mui/material";
+import { Box, Container, Fab, Typography } from "@mui/material";
 import ApplicationBar from "../../components/app-bar/ApplicationBar";
 import useLogoutTrigger from "../../hooks/logout-trigger";
 import AddIcon from "@mui/icons-material/Add";
@@ -14,6 +14,9 @@ const OwnedCircles = (): JSX.Element => {
     <>
       <ApplicationBar />
       <Container maxWidth={false}>
+        <Typography variant="h4" gutterBottom>
+          Owned
+        </Typography>
         <Box
           component="div"
           sx={{
@@ -26,7 +29,11 @@ const OwnedCircles = (): JSX.Element => {
           }}
         >
           {owned.map((circle) => (
-            <Circle key={circle.id} circle={circle} />
+            <Circle
+              key={circle.id}
+              circle={circle}
+              onClick={() => navigate({ to: `/circles/owned/${circle.id}` })}
+            />
           ))}
         </Box>
       </Container>

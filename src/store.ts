@@ -13,10 +13,10 @@ interface InvitationStore {
 interface CircleStore {
   owned: ICircle[];
   joined: ICircle[];
-  circleWithMembers: ICircle;
   setOwned: (circles: ICircle[]) => void;
   setJoined: (circles: ICircle[]) => void;
-  setCircleWithMembers: (circle: ICircle) => void;
+  addMembersToOwnCircle: (circle: ICircle) => void;
+  addMembersToJoinedCircle: (circle: ICircle) => void;
 }
 
 interface UserStore {
@@ -73,11 +73,33 @@ export const useCircleStore = create<CircleStore>()(
   devtools((set) => ({
     owned: [],
     joined: [],
-    circleWithMembers: {} as ICircle,
     setOwned: (circles) => set(() => ({ owned: circles })),
     setJoined: (circles) => set(() => ({ joined: circles })),
-    setCircleWithMembers: (circle) =>
-      set(() => ({ circleWithMembers: circle })),
+    addMembersToOwnCircle: (circleToExtend) =>
+      set(({ owned }) => {
+        const targetCircleIndex = owned.findIndex(
+          (ownedCircle) => ownedCircle.id === circleToExtend.id
+        );
+        const ownedEdited = [
+          ...owned.slice(0, targetCircleIndex),
+          circleToExtend,
+          ...owned.slice(targetCircleIndex + 1),
+        ];
+        return { owned: ownedEdited };
+      }),
+    addMembersToJoinedCircle: (circleToExtend) =>
+      set(({ joined }) => {
+        const targetCircleIndex = joined.findIndex(
+          (joinedCircle) => joinedCircle.id === circleToExtend.id
+        );
+
+        const joinedEdited = [
+          ...joined.slice(0, targetCircleIndex),
+          circleToExtend,
+          ...joined.slice(targetCircleIndex + 1),
+        ];
+        return { joined: joinedEdited };
+      }),
   }))
 );
 

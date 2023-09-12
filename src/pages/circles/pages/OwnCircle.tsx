@@ -31,8 +31,8 @@ import useLogoutTrigger from "../../../hooks/logout-trigger";
 
 const OwnCircle = (): JSX.Element => {
   useLogoutTrigger();
-  const { circleId } = useParams();
-  const { circleWithMembers, setCircleWithMembers } = useCircleStore();
+  const circleId = Number.parseInt(useParams().circleId!);
+  const { owned, addMembersToOwnCircle } = useCircleStore();
   const { setSent, setReceived } = useInvitationStore();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -46,7 +46,7 @@ const OwnCircle = (): JSX.Element => {
   useEffect(() => {
     apiGetOwnedCircle(circleId!)
       .then(({ circle }) => {
-        setCircleWithMembers(circle);
+        addMembersToOwnCircle(circle);
       })
       .catch((error: ErrorResponse) => {
         enqueueSnackbar(error.messages.join("\n"), { variant: "error" });
@@ -55,7 +55,7 @@ const OwnCircle = (): JSX.Element => {
 
   const onSubmit: SubmitHandler<{ username: string }> = (data) => {
     reset();
-    apiCreateInvitation(Number.parseInt(circleId!), data.username)
+    apiCreateInvitation(circleId, data.username)
       .then(() => {
         apiGetInvitations()
           .then(({ sentInvitations, receivedInvitations }) => {
@@ -75,6 +75,9 @@ const OwnCircle = (): JSX.Element => {
       });
   };
 
+  const circle = owned.find((circleElement) => circleElement.id === circleId);
+  if (circle === undefined) return <></>;
+
   return (
     <>
       <ApplicationBar />
@@ -89,7 +92,7 @@ const OwnCircle = (): JSX.Element => {
             alignContent={"center"}
             alignSelf={"center"}
           >
-            {circleWithMembers.name}
+            {circle.name}
           </Typography>
 
           <Box component="form" onSubmit={handleSubmit(onSubmit)}>
@@ -117,36 +120,48 @@ const OwnCircle = (): JSX.Element => {
           </Box>
         </Box>
         <List sx={{ width: "100%" }}>
-          {circleWithMembers.members?.map((member, index) => {
-            const labelId = `member-list-${member.id}`;
-            return (
-              <Paper square elevation={2} key={member.id}>
-                <ListItem
-                  key={member.id}
-                  secondaryAction={
-                    <IconButton edge="end" aria-label="delete" sx={{ mr: 1 }}>
-                      <DeleteIcon />
-                    </IconButton>
-                  }
-                  disablePadding
-                  sx={{
-                    mb: index !== circleWithMembers.members!.length - 1 ? 1 : 0,
-                  }}
-                >
-                  <ListItemButton disableRipple>
-                    <ListItemAvatar>
-                      <Avatar alt={`Avatar member`} src="/2.png" />
-                    </ListItemAvatar>
-                    <ListItemText
-                      id={labelId}
-                      primary={`${member.username}`}
-                      secondary={`ID: ${member.id}`}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              </Paper>
-            );
-          })}
+          {circle.members?.length === 0 ? (
+            <Typography
+              variant="h5"
+              component="h5"
+              color="grey"
+              align="center"
+              marginTop={4}
+            >
+              There are no circle members for now
+            </Typography>
+          ) : (
+            circle.members?.map((member, index) => {
+              const labelId = `member-list-${member.id}`;
+              return (
+                <Paper square elevation={2} key={member.id}>
+                  <ListItem
+                    key={member.id}
+                    secondaryAction={
+                      <IconButton edge="end" aria-label="delete" sx={{ mr: 1 }}>
+                        <DeleteIcon />
+                      </IconButton>
+                    }
+                    disablePadding
+                    sx={{
+                      mb: index !== circle.members!.length - 1 ? 1 : 0,
+                    }}
+                  >
+                    <ListItemButton disableRipple>
+                      <ListItemAvatar>
+                        <Avatar alt={`Avatar member`} src="/2.png" />
+                      </ListItemAvatar>
+                      <ListItemText
+                        id={labelId}
+                        primary={`${member.username}`}
+                        secondary={`ID: ${member.id}`}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                </Paper>
+              );
+            })
+          )}
         </List>
       </Container>
     </>

@@ -7,15 +7,13 @@ import {
   Typography,
 } from "@mui/material";
 import { ICircle } from "../../../types";
-import { useNavigate } from "@tanstack/react-router";
 
 interface CircleProps {
   circle: ICircle;
+  onClick: () => void;
 }
 
-const Circle = ({ circle }: CircleProps): JSX.Element => {
-  const navigate = useNavigate();
-  const onClick = () => navigate({ to: `/circles/owned/${circle.id}` });
+const Circle = ({ circle, onClick }: CircleProps): JSX.Element => {
   return (
     <>
       <Card

@@ -3,16 +3,18 @@ import { Box, Button, Card, CardContent, Typography } from "@mui/material";
 interface InvitationCardProps {
   name: string;
   date: string;
-  sender?: string; // For received invitations
-  status?: string; // For sent invitations
-  onAccept?: () => void; // For received invitations
-  onDecline?: () => void; // For received invitations
+  sender?: string;
+  receiver?: string;
+  status?: string;
+  onAccept?: () => void;
+  onDecline?: () => void;
 }
 
 const InvitationCard = ({
   name,
   date,
   sender,
+  receiver,
   status,
   onAccept,
   onDecline,
@@ -25,6 +27,11 @@ const InvitationCard = ({
         {sender && (
           <Typography variant="body2" color="textSecondary">
             Received from: {sender}
+          </Typography>
+        )}
+        {receiver && (
+          <Typography variant="body2" color="textSecondary">
+            Sent to: {receiver}
           </Typography>
         )}
         {status && (

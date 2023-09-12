@@ -1,16 +1,22 @@
 import ApplicationBar from "../../components/app-bar/ApplicationBar";
 import useLogoutTrigger from "../../hooks/logout-trigger";
-import { Box, Container } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import Circle from "./components/Circle";
 import { useCircleStore } from "../../store";
+import { useNavigate } from "@tanstack/react-router";
 
 const JoinedCircles = (): JSX.Element => {
   useLogoutTrigger();
   const { joined } = useCircleStore();
+  const navigate = useNavigate();
+
   return (
     <>
       <ApplicationBar />
       <Container maxWidth={false}>
+        <Typography variant="h4" gutterBottom>
+          Joined
+        </Typography>
         <Box
           component="div"
           sx={{
@@ -23,7 +29,11 @@ const JoinedCircles = (): JSX.Element => {
           }}
         >
           {joined.map((circle) => (
-            <Circle key={circle.id} circle={circle} />
+            <Circle
+              key={circle.id}
+              circle={circle}
+              onClick={() => navigate({ to: `/circles/joined/${circle.id}` })}
+            />
           ))}
         </Box>
       </Container>

@@ -40,3 +40,12 @@ export const apiGetOwnedCircle = (
     credentials: "include",
   });
 };
+
+export const apiGetJoinedCircle = (
+  circleId: number
+): Promise<{ circle: ICircle }> => {
+  return fetchApi(`/circle/joined/${circleId}`, {
+    method: "GET",
+    credentials: "include",
+  });
+};

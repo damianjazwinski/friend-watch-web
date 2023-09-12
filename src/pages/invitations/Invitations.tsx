@@ -17,7 +17,7 @@ import ApplicationBar from "../../components/app-bar/ApplicationBar";
 import useLogoutTrigger from "../../hooks/logout-trigger";
 import { useCircleStore, useInvitationStore } from "../../store";
 import InvitationCard from "./components/InvitationCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   apiGetInvitations,
   apiReplyInvitation,
@@ -31,6 +31,21 @@ const Invitations = (): JSX.Element => {
   const { sent, received, setSent, setReceived } = useInvitationStore();
   const { setJoined } = useCircleStore();
   const { enqueueSnackbar } = useSnackbar();
+  const [currentTab, setCurrentTab] = useState("received");
+  useEffect(() => {
+    // load invitations on page render
+    apiGetInvitations()
+      .then(({ sentInvitations, receivedInvitations }) => {
+        setSent(sentInvitations);
+        setReceived(receivedInvitations);
+      })
+      .catch((error: ErrorResponse) => {
+        enqueueSnackbar({
+          message: error.messages.join("\n"),
+          variant: "error",
+        });
+      });
+  }, []);
 
   const acceptReceivedInvitationHandler = (id: number) => {
     apiReplyInvitation(id, true)
@@ -84,7 +99,6 @@ const Invitations = (): JSX.Element => {
         enqueueSnackbar(error.messages.join("\n"), { variant: "error" });
       });
   };
-  const [currentTab, setCurrentTab] = useState("received");
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setCurrentTab(newValue);
@@ -108,10 +122,7 @@ const Invitations = (): JSX.Element => {
 
         <TabContext value={currentTab}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <TabList
-              onChange={handleTabChange}
-              aria-label="lab API tabs example"
-            >
+            <TabList onChange={handleTabChange} aria-label="Invitations tab">
               <Tab label="Received" value="received" />
               <Tab label="Sent" value="sent" />
             </TabList>
@@ -134,6 +145,7 @@ const Invitations = (): JSX.Element => {
                     name={`Invitation to circle: ${invitation.invitationCircleName}`}
                     date={new Date(invitation.createdAt).toLocaleString()}
                     status={getInvitationStatus(invitation.isAccepted)}
+                    sender={invitation.invitationCircleOwnerUsername}
                     onAccept={() =>
                       acceptReceivedInvitationHandler(invitation.invitationId)
                     }
@@ -163,6 +175,7 @@ const Invitations = (): JSX.Element => {
                     name={`Invitation to circle: ${invitation.invitationCircleName}`}
                     date={new Date(invitation.createdAt).toLocaleString()}
                     status={getInvitationStatus(invitation.isAccepted)}
+                    receiver={invitation.receiverUsername}
                   />
                 </Box>
               ))
