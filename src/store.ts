@@ -30,11 +30,12 @@ interface UserStore {
 
 interface SideMenuStore {
   isCircleSubmenuOpen: boolean;
+  isWatchesSubmenuOpen: boolean;
   isDrawerOpen: boolean;
   openDrawer: () => void;
   closeDrawer: () => void;
-  openCircleSubmenu: () => void;
-  closeCircleSubmenu: () => void;
+  setCircleSubmenuOpen: (isOpen: boolean) => void;
+  setWatchesSubmenuOpen: (isOpen: boolean) => void;
 }
 
 const checkLocalStorage = (): boolean => {
@@ -62,10 +63,13 @@ export const useSideMenuStore = create<SideMenuStore>()(
   devtools((set) => ({
     isDrawerOpen: false,
     isCircleSubmenuOpen: true,
+    isWatchesSubmenuOpen: false,
     openDrawer: () => set(() => ({ isDrawerOpen: true })),
     closeDrawer: () => set(() => ({ isDrawerOpen: false })),
-    openCircleSubmenu: () => set(() => ({ isCircleSubmenuOpen: true })),
-    closeCircleSubmenu: () => set(() => ({ isCircleSubmenuOpen: false })),
+    setCircleSubmenuOpen: (isOpen: boolean) =>
+      set(() => ({ isCircleSubmenuOpen: isOpen })),
+    setWatchesSubmenuOpen: (isOpen: boolean) =>
+      set(() => ({ isWatchesSubmenuOpen: isOpen })),
   }))
 );
 

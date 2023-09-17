@@ -13,7 +13,7 @@ import {
   useTheme,
 } from "@mui/material";
 import "./SideMenu.scss";
-import { useSideMenuStore, useUserStore } from "../../store";
+import { useCircleStore, useSideMenuStore, useUserStore } from "../../store";
 import { apiLogout } from "../../api/auth-api";
 import HomeIcon from "@mui/icons-material/Home";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -27,15 +27,17 @@ const SideMenu = (): JSX.Element => {
   const {
     isDrawerOpen,
     isCircleSubmenuOpen,
+    isWatchesSubmenuOpen,
     closeDrawer,
     openDrawer,
-    openCircleSubmenu,
-    closeCircleSubmenu,
+    setCircleSubmenuOpen,
+    setWatchesSubmenuOpen,
   } = useSideMenuStore();
-  const { username } = useUserStore();
+  const { username, logout } = useUserStore();
+  const { owned, joined } = useCircleStore();
   const navigate = useNavigate();
-  const { logout } = useUserStore();
   const theme = useTheme();
+  const allCircles = [...joined, ...owned];
 
   const homeButtonHandler = () => {
     navigate({ to: "/" });
@@ -43,12 +45,15 @@ const SideMenu = (): JSX.Element => {
   };
 
   const circlesButtonHandler = () => {
-    // navigate({ to: "/circles" });
-    if (!isCircleSubmenuOpen) openCircleSubmenu();
-    else closeCircleSubmenu();
-
-    // closeDrawer();
+    if (!isCircleSubmenuOpen) setCircleSubmenuOpen(true);
+    else setCircleSubmenuOpen(false);
   };
+
+  const watchesButtonHandler = () => {
+    if (!isWatchesSubmenuOpen) setWatchesSubmenuOpen(true);
+    else setWatchesSubmenuOpen(false);
+  };
+
   const joinedCirclesButtonHandler = () => {
     navigate({ to: "/circles/joined" });
     closeDrawer();
@@ -56,11 +61,6 @@ const SideMenu = (): JSX.Element => {
 
   const ownedCirclesButtonHandler = () => {
     navigate({ to: "/circles/owned" });
-    closeDrawer();
-  };
-
-  const watchesButtonHandler = () => {
-    navigate({ to: "/watches" });
     closeDrawer();
   };
 
@@ -125,7 +125,7 @@ const SideMenu = (): JSX.Element => {
             <Divider />
             <List component="div" disablePadding>
               <ListItem
-                key="joinded-circles"
+                key="joined-circles"
                 disablePadding
                 sx={{
                   backgroundColor: theme.palette.background.default,
@@ -157,9 +157,32 @@ const SideMenu = (): JSX.Element => {
                 <OndemandVideoIcon />
               </ListItemIcon>
               <ListItemText primary="Watches" />
+              {isWatchesSubmenuOpen ? <ExpandMore /> : <ExpandLess />}
             </ListItemButton>
           </ListItem>
-          {/**/}
+          <Collapse in={isWatchesSubmenuOpen} timeout="auto" unmountOnExit>
+            <Divider />
+            <List component="div" disablePadding>
+              {allCircles.map((circle) => (
+                <ListItem
+                  disablePadding
+                  key={circle.id}
+                  sx={{
+                    backgroundColor: theme.palette.background.default,
+                  }}
+                >
+                  <ListItemButton
+                    onClick={() => {
+                      navigate({ to: `/watches/circle/${circle.id}` });
+                      closeDrawer();
+                    }}
+                  >
+                    <ListItemText primary={circle.name} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </Collapse>
           <ListItem key="invitations" disablePadding>
             <ListItemButton onClick={invitationsButtonHandler}>
               <ListItemIcon>
