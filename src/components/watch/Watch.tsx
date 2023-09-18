@@ -15,23 +15,19 @@ interface WatchProps {
   externalLink?: string;
   creatorUsername: string;
   createdAt: string;
+  circleName?: string;
 }
 
 const Watch = ({
-  id,
   message,
   externalLink,
   creatorUsername,
   createdAt,
+  circleName,
 }: WatchProps): JSX.Element => {
   return (
     <>
-      <Paper
-        square
-        key={id}
-        elevation={3}
-        sx={{ margin: "16px 0", padding: "16px" }}
-      >
+      <Paper square elevation={3} sx={{ margin: "16px 0", padding: "16px" }}>
         <Box
           display={"flex"}
           flexDirection={"row"}
@@ -43,6 +39,9 @@ const Watch = ({
             <Typography variant="body1" component="span" fontWeight={500}>
               {creatorUsername}
             </Typography>
+            {circleName && (
+              <Typography variant="caption">{circleName}</Typography>
+            )}
             <Typography variant="caption">{createdAt}</Typography>
           </Box>
         </Box>
@@ -60,12 +59,7 @@ const Watch = ({
           </Button>
         )}
       </Paper>
-      <Paper
-        square
-        key={id}
-        elevation={3}
-        sx={{ margin: "16px 0", padding: "16px" }}
-      >
+      <Paper square elevation={3} sx={{ margin: "16px 0", padding: "16px" }}>
         <Typography variant="h5" component="h5">
           Comments
         </Typography>

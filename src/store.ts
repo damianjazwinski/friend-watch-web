@@ -1,8 +1,12 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import { ICircle, IInvitation } from "./types";
+import { ICircle, IInvitation, IWatch } from "./types";
 
-// TODO: Add invitations store
+interface WatchStore {
+  watches: IWatch[];
+  setWatches: (watches: IWatch[]) => void;
+}
+
 interface InvitationStore {
   sent: IInvitation[];
   received: IInvitation[];
@@ -113,5 +117,12 @@ export const useInvitationStore = create<InvitationStore>()(
     received: [],
     setSent: (invitations) => set(() => ({ sent: invitations })),
     setReceived: (invitations) => set(() => ({ received: invitations })),
+  }))
+);
+
+export const useWatchStore = create<WatchStore>()(
+  devtools((set) => ({
+    watches: [],
+    setWatches: (watches) => set(() => ({ watches })),
   }))
 );

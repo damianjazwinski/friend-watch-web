@@ -26,3 +26,25 @@ export interface IInvitation {
   invitationCircleOwnerId?: number;
   invitationCircleOwnerUsername?: string;
 }
+
+export interface IWatch {
+  watchId: number;
+  circleId: number;
+  message: string;
+  externalLink?: string;
+  creatorId: number;
+  creatorName: string;
+  createdAt: string;
+  updatedAt?: string;
+  circleName: string;
+  comments: IComments[];
+}
+
+export interface IComments {
+  commentId: number;
+  commenterId: number;
+  commenterName: string;
+  watchId: number;
+  content: string;
+  createdAt: string;
+}
