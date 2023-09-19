@@ -15,12 +15,14 @@ import { enqueueSnackbar } from "notistack";
 import { apiGetJoinedCircles, apiGetOwnedCircles } from "./api/circles-api";
 import { apiGetInvitations } from "./api/invitation-api";
 import { apiGetAllWatches } from "./api/watches-api";
+import useCommentsWebsocket from "./hooks/comments-websocket";
 
 function App() {
   const { isLoggedIn, setUserData, logout } = useUserStore();
   const { setOwned, setJoined } = useCircleStore();
   const { setSent, setReceived } = useInvitationStore();
   const { setWatches } = useWatchStore();
+  useCommentsWebsocket();
 
   useEffect(() => {
     if (isLoggedIn) {

@@ -128,6 +128,7 @@ const Watches = (): JSX.Element => {
                 timeStyle: "medium",
               }).format(new Date(watch.createdAt))}
               message={watch.message}
+              comments={watch.comments}
             />
           ))
         )}

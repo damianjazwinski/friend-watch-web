@@ -8,6 +8,8 @@ import {
   Typography,
 } from "@mui/material";
 import LinkIcon from "@mui/icons-material/Link";
+import { IComment } from "../../types";
+import Comments from "../comments/Comments";
 
 interface WatchProps {
   id: number;
@@ -16,14 +18,17 @@ interface WatchProps {
   creatorUsername: string;
   createdAt: string;
   circleName?: string;
+  comments: IComment[];
 }
 
 const Watch = ({
+  id,
   message,
   externalLink,
   creatorUsername,
   createdAt,
   circleName,
+  comments,
 }: WatchProps): JSX.Element => {
   return (
     <>
@@ -58,12 +63,8 @@ const Watch = ({
             Watch
           </Button>
         )}
-      </Paper>
-      <Paper square elevation={3} sx={{ margin: "16px 0", padding: "16px" }}>
-        <Typography variant="h5" component="h5">
-          Comments
-        </Typography>
-        <Divider />
+
+        <Comments comments={comments} watchId={id} />
       </Paper>
     </>
   );

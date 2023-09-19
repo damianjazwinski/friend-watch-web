@@ -37,10 +37,10 @@ export interface IWatch {
   createdAt: string;
   updatedAt?: string;
   circleName: string;
-  comments: IComments[];
+  comments: IComment[];
 }
 
-export interface IComments {
+export interface IComment {
   commentId: number;
   commenterId: number;
   commenterName: string;

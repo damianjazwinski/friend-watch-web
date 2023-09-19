@@ -62,6 +62,7 @@ const Home = (): JSX.Element => {
               }).format(new Date(watch.createdAt))}
               message={watch.message}
               circleName={watch.circleName}
+              comments={watch.comments}
             />
           ))
         )}
