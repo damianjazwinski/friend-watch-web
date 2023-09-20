@@ -15,7 +15,7 @@ import {
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import ApplicationBar from "../../components/app-bar/ApplicationBar";
 import useLogoutTrigger from "../../hooks/logout-trigger";
-import { useCircleStore, useInvitationStore } from "../../store";
+import { useCircleStore, useInvitationStore, useWatchStore } from "../../store";
 import InvitationCard from "./components/InvitationCard";
 import { useEffect, useState } from "react";
 import {
@@ -25,11 +25,13 @@ import {
 import { useSnackbar } from "notistack";
 import { ErrorResponse } from "../../api/api-tool";
 import { apiGetJoinedCircles } from "../../api/circles-api";
+import { apiGetAllWatches } from "../../api/watches-api";
 
 const Invitations = (): JSX.Element => {
   useLogoutTrigger();
   const { sent, received, setSent, setReceived } = useInvitationStore();
   const { setJoined } = useCircleStore();
+  const { setWatches } = useWatchStore();
   const { enqueueSnackbar } = useSnackbar();
   const [currentTab, setCurrentTab] = useState("received");
   useEffect(() => {
@@ -72,6 +74,18 @@ const Invitations = (): JSX.Element => {
               variant: "error",
             });
           });
+
+        apiGetAllWatches()
+          .then(({ watches }) => {
+            setWatches(watches);
+          })
+          .catch((error: ErrorResponse) => {
+            enqueueSnackbar({
+              message: error.messages.join("\n"),
+              variant: "error",
+            });
+          });
+
         enqueueSnackbar("Circle invitation accepted", { variant: "success" });
       })
       .catch((error: ErrorResponse) => {

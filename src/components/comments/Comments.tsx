@@ -73,8 +73,11 @@ const Comments = ({ comments, watchId }: CommentsProps): JSX.Element => {
               key={comment.commentId}
               divider={index !== comments.length - 1}
             >
-              <ListItemAvatar sx={{}}>
-                <Avatar alt={comment.commenterName} src="/2.png?url" />
+              <ListItemAvatar>
+                <Avatar
+                  alt={comment.commenterName}
+                  src={comment.commenterAvatarUrl ?? ""}
+                />
               </ListItemAvatar>
               <ListItemText
                 primary={comment.commenterName}

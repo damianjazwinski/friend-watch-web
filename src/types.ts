@@ -35,6 +35,7 @@ export interface IWatch {
   externalLink?: string;
   creatorId: number;
   creatorName: string;
+  creatorAvatarUrl?: string;
   createdAt: string;
   updatedAt?: string;
   circleName: string;
@@ -45,6 +46,7 @@ export interface IComment {
   commentId: number;
   commenterId: number;
   commenterName: string;
+  commenterAvatarUrl?: string;
   watchId: number;
   content: string;
   createdAt: string;

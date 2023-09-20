@@ -55,6 +55,7 @@ const Home = (): JSX.Element => {
               key={watch.watchId}
               id={watch.watchId}
               creatorUsername={watch.creatorName}
+              creatorAvatarUrl={watch.creatorAvatarUrl}
               externalLink={watch.externalLink}
               createdAt={new Intl.DateTimeFormat("pl-PL", {
                 dateStyle: "short",
