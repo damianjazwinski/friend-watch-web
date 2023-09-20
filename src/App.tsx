@@ -27,8 +27,8 @@ function App() {
   useEffect(() => {
     if (isLoggedIn) {
       apiGetUser()
-        .then(({ id, username }) => {
-          setUserData(id, username);
+        .then(({ id, username, userAvatarUrl }) => {
+          setUserData(id, username, userAvatarUrl);
         })
         .catch((error: ErrorResponse) => {
           enqueueSnackbar({

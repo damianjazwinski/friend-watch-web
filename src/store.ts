@@ -27,9 +27,11 @@ interface UserStore {
   isLoggedIn: boolean;
   username: string;
   id: number;
+  userAvatarUrl?: string;
   login: () => void;
   logout: () => void;
-  setUserData: (id: number, username: string) => void;
+  setUserData: (id: number, username: string, userAvatarUrl?: string) => void;
+  setUserAvatarUrl: (userAvatarUrl?: string) => void;
 }
 
 interface SideMenuStore {
@@ -56,10 +58,13 @@ export const useUserStore = create<UserStore>()(
     isLoggedIn: checkLocalStorage(),
     username: "",
     id: 0,
+    userAvatarUrl: undefined,
     // reducers
     login: () => set(() => ({ isLoggedIn: true })),
     logout: () => set(() => ({ isLoggedIn: false, username: "", id: 0 })),
-    setUserData: (id, username) => set(() => ({ id, username })),
+    setUserData: (id, username, userAvatarUrl) =>
+      set(() => ({ id, username, userAvatarUrl })),
+    setUserAvatarUrl: (userAvatarUrl) => set(() => ({ userAvatarUrl })),
   }))
 );
 

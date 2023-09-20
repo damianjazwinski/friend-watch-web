@@ -12,6 +12,7 @@ export interface IImageFile {
 export interface IUser {
   id: number;
   username: string;
+  userAvatarUrl?: string;
 }
 
 export interface IInvitation {

@@ -46,7 +46,7 @@ const OwnCircle = (): JSX.Element => {
   useEffect(() => {
     apiGetOwnedCircle(circleId!)
       .then(({ circle }) => {
-        addMembersToOwnCircle(circle);
+        addMembersToOwnCircle(circle); // lazy loading circle members
       })
       .catch((error: ErrorResponse) => {
         enqueueSnackbar(error.messages.join("\n"), { variant: "error" });
@@ -149,7 +149,10 @@ const OwnCircle = (): JSX.Element => {
                   >
                     <ListItemButton disableRipple>
                       <ListItemAvatar>
-                        <Avatar alt={`Avatar member`} src="/2.png" />
+                        <Avatar
+                          alt={`Avatar member`}
+                          src={member.userAvatarUrl ?? ""}
+                        />
                       </ListItemAvatar>
                       <ListItemText
                         id={labelId}

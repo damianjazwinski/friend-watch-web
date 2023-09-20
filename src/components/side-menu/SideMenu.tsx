@@ -1,8 +1,15 @@
 import {
   Avatar,
   Box,
+  Button,
   Collapse,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Divider,
+  IconButton,
   List,
   ListItem,
   ListItemAvatar,
@@ -10,6 +17,7 @@ import {
   ListItemIcon,
   ListItemText,
   SwipeableDrawer,
+  styled,
   useTheme,
 } from "@mui/material";
 import "./SideMenu.scss";
@@ -18,10 +26,20 @@ import { apiLogout } from "../../api/auth-api";
 import HomeIcon from "@mui/icons-material/Home";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import { useNavigate } from "@tanstack/react-router";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import { useState } from "react";
+import { ChangeHandler, SubmitHandler, useForm } from "react-hook-form";
+import { apiSetUserAvatar } from "../../api/user-api";
+import { useSnackbar } from "notistack";
+import { ErrorResponse } from "../../api/api-tool";
+
+interface AvatarInput {
+  avatarImageFile: FileList;
+}
 
 const SideMenu = (): JSX.Element => {
   const {
@@ -33,8 +51,52 @@ const SideMenu = (): JSX.Element => {
     setCircleSubmenuOpen,
     setWatchesSubmenuOpen,
   } = useSideMenuStore();
-  const { username, logout } = useUserStore();
+  const { enqueueSnackbar } = useSnackbar();
+  const { username, userAvatarUrl, setUserAvatarUrl, logout } = useUserStore();
   const { owned, joined } = useCircleStore();
+  const [open, setOpen] = useState(false);
+  const [pictureName, setPictureName] = useState("Add circle picture");
+  const [avatarPreview, setAvatarPreview] = useState<File | undefined>(
+    undefined
+  );
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setPictureName("Add circle picture");
+    setAvatarPreview(undefined);
+  };
+
+  // user avatar submit handler
+  const onSubmit: SubmitHandler<AvatarInput> = (data) => {
+    apiSetUserAvatar(data.avatarImageFile[0])
+      .then(({ userAvatarUrl }) => {
+        setUserAvatarUrl(userAvatarUrl);
+        enqueueSnackbar("New avatar set", { variant: "success" });
+      })
+      .catch((error: ErrorResponse) => {
+        enqueueSnackbar({
+          message: error.messages.join("\n"),
+          variant: "error",
+        });
+      });
+
+    handleClose();
+  };
+
+  const onChange: ChangeHandler = async (event) => {
+    setPictureName(event.target.files[0].name);
+    setAvatarPreview(event.target.files[0]);
+  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm<AvatarInput>();
   const navigate = useNavigate();
   const theme = useTheme();
   const allCircles = [...joined, ...owned];
@@ -89,16 +151,15 @@ const SideMenu = (): JSX.Element => {
           sx={{ display: "flex", flexDirection: "column", height: "100dvh" }}
           disablePadding
         >
-          <ListItem key="profile" disablePadding>
-            <ListItemButton>
-              <ListItemAvatar>
-                <Avatar alt="Avatar" src="/2.png?url" />
-              </ListItemAvatar>
-              <ListItemText
-                primaryTypographyProps={{ sx: { fontWeight: 800 } }}
-                primary={`Hello, ${username}!`}
-              />
-            </ListItemButton>
+          <ListItem key="profile" sx={{ padding: "4px 0px 4px 16px" }}>
+            <IconButton onClick={handleClickOpen}>
+              <Avatar alt="Avatar" src={userAvatarUrl} />
+            </IconButton>
+            <ListItemText
+              sx={{ paddingLeft: "10px" }}
+              primary={`Hello, ${username}!`}
+              primaryTypographyProps={{ sx: { fontWeight: 800, fontSize: 18 } }}
+            />
           </ListItem>
           {/**/}
           <Divider />
@@ -110,7 +171,38 @@ const SideMenu = (): JSX.Element => {
               <ListItemText primary="Home" />
             </ListItemButton>
           </ListItem>
-          {/**/}
+          <ListItem key="watches" disablePadding>
+            <ListItemButton onClick={watchesButtonHandler}>
+              <ListItemIcon>
+                <OndemandVideoIcon />
+              </ListItemIcon>
+              <ListItemText primary="Watches" />
+              {isWatchesSubmenuOpen ? <ExpandMore /> : <ExpandLess />}
+            </ListItemButton>
+          </ListItem>
+          <Collapse in={isWatchesSubmenuOpen} timeout="auto" unmountOnExit>
+            <Divider />
+            <List component="div" disablePadding>
+              {allCircles.map((circle) => (
+                <ListItem
+                  disablePadding
+                  key={circle.id}
+                  sx={{
+                    backgroundColor: theme.palette.background.default,
+                  }}
+                >
+                  <ListItemButton
+                    onClick={() => {
+                      navigate({ to: `/watches/circle/${circle.id}` });
+                      closeDrawer();
+                    }}
+                  >
+                    <ListItemText primary={circle.name} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </Collapse>
           <ListItem key="circles" disablePadding>
             <ListItemButton onClick={circlesButtonHandler}>
               <ListItemIcon>
@@ -151,38 +243,7 @@ const SideMenu = (): JSX.Element => {
             </List>
           </Collapse>
           {/**/}
-          <ListItem key="watches" disablePadding>
-            <ListItemButton onClick={watchesButtonHandler}>
-              <ListItemIcon>
-                <OndemandVideoIcon />
-              </ListItemIcon>
-              <ListItemText primary="Watches" />
-              {isWatchesSubmenuOpen ? <ExpandMore /> : <ExpandLess />}
-            </ListItemButton>
-          </ListItem>
-          <Collapse in={isWatchesSubmenuOpen} timeout="auto" unmountOnExit>
-            <Divider />
-            <List component="div" disablePadding>
-              {allCircles.map((circle) => (
-                <ListItem
-                  disablePadding
-                  key={circle.id}
-                  sx={{
-                    backgroundColor: theme.palette.background.default,
-                  }}
-                >
-                  <ListItemButton
-                    onClick={() => {
-                      navigate({ to: `/watches/circle/${circle.id}` });
-                      closeDrawer();
-                    }}
-                  >
-                    <ListItemText primary={circle.name} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          </Collapse>
+
           <ListItem key="invitations" disablePadding>
             <ListItemButton onClick={invitationsButtonHandler}>
               <ListItemIcon>
@@ -203,6 +264,50 @@ const SideMenu = (): JSX.Element => {
           </ListItem>
         </List>
       </Box>
+      {/**/}
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        component="form"
+        fullWidth
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <DialogTitle>Set avatar</DialogTitle>
+        <Box margin={"0 auto"}>
+          <Avatar
+            sx={{ width: "200px", height: "200px" }}
+            src={
+              avatarPreview
+                ? URL.createObjectURL(avatarPreview!)
+                : userAvatarUrl
+            }
+          />
+        </Box>
+        <DialogContent>
+          <Button
+            startIcon={<PhotoCamera />}
+            fullWidth
+            component="label"
+            variant="contained"
+            aria-label="upload picture"
+            sx={{ mt: 3 }}
+          >
+            <input
+              multiple={false}
+              hidden
+              accept="image/*"
+              type="file"
+              id="avatarImageFile"
+              {...register("avatarImageFile", { onChange: onChange })}
+            />
+            {pictureName}
+          </Button>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button type="submit">OK</Button>
+        </DialogActions>
+      </Dialog>
     </SwipeableDrawer>
   );
 };
