@@ -1,4 +1,4 @@
-import { useParams, warning } from "@tanstack/react-router";
+import { useParams } from "@tanstack/react-router";
 import ApplicationBar from "../../components/app-bar/ApplicationBar";
 import useLogoutTrigger from "../../hooks/logout-trigger";
 import {
@@ -15,12 +15,7 @@ import { apiCreateWatch, apiGetAllWatches } from "../../api/watches-api";
 import { ErrorResponse } from "../../api/api-tool";
 import { useWatchStore } from "../../store";
 import { useSnackbar } from "notistack";
-import {
-  DateTimePicker,
-  LocalizationProvider,
-  MobileDateTimePicker,
-} from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+
 import dayjs from "dayjs";
 
 interface CreateWatchInputs {

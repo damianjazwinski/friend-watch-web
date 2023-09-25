@@ -1,15 +1,7 @@
 import ApplicationBar from "../../components/app-bar/ApplicationBar";
 import "./Home.scss";
 import useLogoutTrigger from "../../hooks/logout-trigger";
-import {
-  Avatar,
-  Box,
-  Button,
-  Container,
-  Paper,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import Watch from "../../components/watch/Watch";
 import { useWatchStore } from "../../store";
 import { useEffect } from "react";
