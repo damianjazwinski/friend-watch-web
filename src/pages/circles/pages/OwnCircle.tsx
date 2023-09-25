@@ -137,11 +137,6 @@ const OwnCircle = (): JSX.Element => {
                 <Paper square elevation={2} key={member.id}>
                   <ListItem
                     key={member.id}
-                    secondaryAction={
-                      <IconButton edge="end" aria-label="delete" sx={{ mr: 1 }}>
-                        <DeleteIcon />
-                      </IconButton>
-                    }
                     disablePadding
                     sx={{
                       mb: index !== circle.members!.length - 1 ? 1 : 0,
@@ -157,7 +152,6 @@ const OwnCircle = (): JSX.Element => {
                       <ListItemText
                         id={labelId}
                         primary={`${member.username}`}
-                        secondary={`ID: ${member.id}`}
                       />
                     </ListItemButton>
                   </ListItem>

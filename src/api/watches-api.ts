@@ -4,12 +4,13 @@ import { fetchApi } from "./api-tool";
 export const apiCreateWatch = (
   circleId: number,
   message: string,
-  externalLink?: string
+  externalLink?: string,
+  expirationDate?: string
 ): Promise<any> => {
   return fetchApi("/watch", {
     method: "POST",
     credentials: "include",
-    body: JSON.stringify({ circleId, message, externalLink }),
+    body: JSON.stringify({ circleId, message, externalLink, expirationDate }),
     headers: { "Content-Type": "application/json" },
   });
 };

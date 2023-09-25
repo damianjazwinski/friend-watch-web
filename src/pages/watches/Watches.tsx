@@ -9,16 +9,24 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ChangeHandler, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import Watch from "../../components/watch/Watch";
 import { apiCreateWatch, apiGetAllWatches } from "../../api/watches-api";
 import { ErrorResponse } from "../../api/api-tool";
 import { useWatchStore } from "../../store";
 import { useSnackbar } from "notistack";
+import {
+  DateTimePicker,
+  LocalizationProvider,
+  MobileDateTimePicker,
+} from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 
 interface CreateWatchInputs {
   message: string;
   externalLink: string;
+  expirationDate: string;
 }
 
 const Watches = (): JSX.Element => {
@@ -40,7 +48,12 @@ const Watches = (): JSX.Element => {
   } = useForm<CreateWatchInputs>();
 
   const onSubmit: SubmitHandler<CreateWatchInputs> = (data) => {
-    apiCreateWatch(circleId, data.message, data.externalLink)
+    apiCreateWatch(
+      circleId,
+      data.message,
+      data.externalLink,
+      data.expirationDate
+    )
       .then(() => {
         reset();
         apiGetAllWatches()
@@ -55,10 +68,19 @@ const Watches = (): JSX.Element => {
           });
       })
       .catch((error: ErrorResponse) => {
-        setError("message", {
-          type: "validate",
-          message: error.messages.join("\n"),
-        });
+        if (
+          error.messages.some((message) => message.startsWith("Expiration"))
+        ) {
+          setError("expirationDate", {
+            type: "validate",
+            message: error.messages.join("\n"),
+          });
+        } else {
+          setError("message", {
+            type: "validate",
+            message: error.messages.join("\n"),
+          });
+        }
       });
   };
 
@@ -95,6 +117,23 @@ const Watches = (): JSX.Element => {
                 helperText={errors.externalLink?.message}
                 {...register("externalLink")}
               />
+              <Typography variant="body1" component="span">
+                Expiration date
+              </Typography>
+              <TextField
+                InputProps={{
+                  inputProps: {
+                    min: dayjs().format("YYYY-MM-DDThh:mm"),
+                  },
+                }}
+                variant="outlined"
+                type="datetime-local"
+                sx={{ minWidth: "200px" }}
+                error={!!errors.expirationDate}
+                helperText={errors.expirationDate?.message}
+                {...register("expirationDate")}
+              />
+
               <Button
                 type="submit"
                 variant={"contained"}
@@ -124,10 +163,8 @@ const Watches = (): JSX.Element => {
               creatorUsername={watch.creatorName}
               creatorAvatarUrl={watch.creatorAvatarUrl}
               externalLink={watch.externalLink}
-              createdAt={new Intl.DateTimeFormat("pl-PL", {
-                dateStyle: "short",
-                timeStyle: "medium",
-              }).format(new Date(watch.createdAt))}
+              expirationDate={watch.expirationDate}
+              createdAt={watch.createdAt}
               message={watch.message}
               comments={watch.comments}
             />

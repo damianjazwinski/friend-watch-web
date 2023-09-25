@@ -57,10 +57,8 @@ const Home = (): JSX.Element => {
               creatorUsername={watch.creatorName}
               creatorAvatarUrl={watch.creatorAvatarUrl}
               externalLink={watch.externalLink}
-              createdAt={new Intl.DateTimeFormat("pl-PL", {
-                dateStyle: "short",
-                timeStyle: "medium",
-              }).format(new Date(watch.createdAt))}
+              expirationDate={watch.expirationDate}
+              createdAt={watch.createdAt}
               message={watch.message}
               circleName={watch.circleName}
               comments={watch.comments}

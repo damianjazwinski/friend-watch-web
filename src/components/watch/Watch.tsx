@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   CardContent,
+  Chip,
   Collapse,
   Divider,
   IconButton,
@@ -20,6 +21,7 @@ interface WatchProps {
   id: number;
   message: string;
   externalLink?: string;
+  expirationDate?: string;
   creatorUsername: string;
   creatorAvatarUrl?: string;
   createdAt: string;
@@ -31,6 +33,7 @@ const Watch = ({
   id,
   message,
   externalLink,
+  expirationDate,
   creatorUsername,
   creatorAvatarUrl,
   createdAt,
@@ -38,6 +41,14 @@ const Watch = ({
   comments,
 }: WatchProps): JSX.Element => {
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const processDatetime = (datetime: string) => {
+    return new Intl.DateTimeFormat("pl-PL", {
+      dateStyle: "short",
+      timeStyle: "medium",
+    }).format(new Date(datetime));
+  };
+
   return (
     <>
       <Card square elevation={3} sx={{ margin: "16px 0", padding: "16px" }}>
@@ -56,9 +67,18 @@ const Watch = ({
               {circleName && (
                 <Typography variant="caption">{circleName}</Typography>
               )}
-              <Typography variant="caption">{createdAt}</Typography>
+              <Typography variant="caption">
+                {processDatetime(createdAt)}
+              </Typography>
             </Box>
           </Box>
+          {expirationDate && (
+            <Chip
+              sx={{ marginTop: 1 }}
+              variant="outlined"
+              label={`Expiration date: ${processDatetime(expirationDate!)}`}
+            />
+          )}
           <Typography variant="body1" marginY={1}>
             {message}
           </Typography>

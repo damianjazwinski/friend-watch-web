@@ -33,6 +33,7 @@ export interface IWatch {
   circleId: number;
   message: string;
   externalLink?: string;
+  expirationDate?: string;
   creatorId: number;
   creatorName: string;
   creatorAvatarUrl?: string;
