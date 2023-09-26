@@ -73,11 +73,7 @@ const JoinedCircle = (): JSX.Element => {
                         src={member.userAvatarUrl ?? ""}
                       />
                     </ListItemAvatar>
-                    <ListItemText
-                      id={labelId}
-                      primary={`${member.username}`}
-                      secondary={`ID: ${member.id}`}
-                    />
+                    <ListItemText id={labelId} primary={`${member.username}`} />
                   </ListItemButton>
                 </ListItem>
               </Paper>

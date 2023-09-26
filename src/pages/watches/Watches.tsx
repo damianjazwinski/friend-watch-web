@@ -92,6 +92,7 @@ const Watches = (): JSX.Element => {
         >
           <Box flexGrow={1} display={"flex"} flexDirection={"column"} gap={1}>
             <TextField
+              size="small"
               label="Watch message"
               variant="outlined"
               fullWidth
@@ -105,6 +106,7 @@ const Watches = (): JSX.Element => {
             />
             <Box display={"flex"} flexDirection={"row"} gap={1}>
               <TextField
+                size="small"
                 label="External link"
                 variant="outlined"
                 fullWidth
@@ -112,10 +114,11 @@ const Watches = (): JSX.Element => {
                 helperText={errors.externalLink?.message}
                 {...register("externalLink")}
               />
-              <Typography variant="body1" component="span">
+              <Typography variant="body2" component="span">
                 Expiration date
               </Typography>
               <TextField
+                size="small"
                 InputProps={{
                   inputProps: {
                     min: dayjs().format("YYYY-MM-DDThh:mm"),
@@ -131,6 +134,7 @@ const Watches = (): JSX.Element => {
 
               <Button
                 type="submit"
+                size="small"
                 variant={"contained"}
                 sx={{ width: "200px" }}
               >

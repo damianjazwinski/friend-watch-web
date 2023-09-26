@@ -148,7 +148,11 @@ const SideMenu = (): JSX.Element => {
     >
       <Box width={250}>
         <List
-          sx={{ display: "flex", flexDirection: "column", height: "100dvh" }}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100dvh",
+          }}
           disablePadding
         >
           <ListItem key="profile" sx={{ padding: "4px 0px 4px 16px" }}>
@@ -182,7 +186,11 @@ const SideMenu = (): JSX.Element => {
           </ListItem>
           <Collapse in={isWatchesSubmenuOpen} timeout="auto" unmountOnExit>
             <Divider />
-            <List component="div" disablePadding>
+            <List
+              component="div"
+              disablePadding
+              sx={{ maxHeight: 150, overflow: "auto" }}
+            >
               {allCircles.map((circle) => (
                 <ListItem
                   disablePadding
