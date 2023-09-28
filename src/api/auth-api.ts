@@ -1,4 +1,4 @@
-import { baseUrl, fetchApi } from "./api-tool";
+import { baseUrl } from "./api-tool";
 
 export const apiLogin = (username: string, password: string) => {
   const options: RequestInit = {
@@ -24,12 +24,6 @@ export const apiRegister = (
 
   return fetch(`${baseUrl}/auth/register`, options);
 };
-
-export const forbiddenPing = () =>
-  fetchApi("/auth/forbidden-ping", {
-    method: "GET",
-    credentials: "include",
-  });
 
 export const apiLogout = () => {
   return fetch(`${baseUrl}/auth/logout`, {
